@@ -13,7 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Serveur {
-    // Remplacer "8080" par le port que vous souhaitez utiliser pour la connexion
+    // Remplacer "8080" par le port que vous souhaitez utiliser pour la connexion au server 
     private static final int PORT = 2222;
     private static String temperature;
     private static String humidite;
