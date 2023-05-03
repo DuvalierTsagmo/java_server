@@ -1,0 +1,30 @@
+code de html "<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Temperature and Humidity Data</title>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+    <h1>Temperature and Humidity Data</h1>
+    <p>Temperature: <span id="temperature"></span> C</p>
+    <p>Humidity: <span id="humidity"></span> %</p>
+
+    <script>
+        // Make a request to the server to get the latest temperature and humidity data
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                // Update the temperature and humidity values on the web page
+                const data = JSON.parse(this.responseText);
+                document.getElementById("temperature").textContent = 25;
+                document.getElementById("humidity").textContent = 32;
+            }
+        };
+        xhr.open("GET", "http://localhost:2222/data", true);
+        xhr.send();
+    </script>
+</body>
+
+</html>"

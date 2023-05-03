@@ -9,11 +9,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Serveur {
-    // Remplacer "8080" par le port que vous souhaitez utiliser pour la connexion au server 
+    // Remplacer "8080" par le port que vous souhaitez utiliser pour la connexion au
+    // server
     private static final int PORT = 2222;
     private static String temperature;
     private static String humidite;
@@ -44,6 +46,8 @@ public class Serveur {
                     base.insert(temperature);
                     // Insérer l'humidité dans la base de données
                     base.insert(humidite);
+                    // Envoi de la réponse au client HTML
+                    sendResponse(socket);
                 } catch (IOException e) {
                     System.err.println("Erreur lors de la lecture du message: " + e.getMessage());
                 } catch (Exception e) {
@@ -62,7 +66,6 @@ public class Serveur {
     private static void decryptData(String data) {
         // Rechercher les positions des caractères ":" et "C" pour extraire la
         // température
-
         int posTemperature = data.indexOf(":");
         int posC = data.indexOf("C");
         temperature = data.substring(posTemperature + 2, posC).trim();
@@ -72,9 +75,30 @@ public class Serveur {
         int posPercent = data.lastIndexOf("%");
         humidite = data.substring(posHumidity + 2, posPercent).trim();
 
-        // affichage de la temperature et l'humiditer
+        // affichage de la temperature et l'humidité
         System.out.println("Temp: " + temperature + " C");
         System.out.println("Hum: " + humidite + " %");
+    }
+
+    private static void sendResponse(Socket socket) throws IOException {
+        // Création d'un objet PrintWriter pour envoyer des données via le socket
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+        // Envoi de l'en-tête de la réponse HTTP
+        out.println("HTTP/1.1 200 OK");
+        out.println("Content-Type: text/html");
+        out.println("Connection: close");
+        out.println();
+
+        // Envoi de la réponse HTML
+        out.println("<html><head><title>Server Java</title></head><body>");
+        out.println("<h1>Données reçues</h1>");
+        out.println("<p>Température : " + temperature + " C</p>");
+        out.println("<p>Humidité : " + humidite + " %</p>");
+        out.println("</body></html>");
+
+        // Fermeture du flux PrintWriter
+        out.close();
     }
 
 }
